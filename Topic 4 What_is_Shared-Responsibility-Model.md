@@ -70,3 +70,11 @@ graph TD
 
     style OnPremises fill:#f9f9f9,stroke:#333,stroke-width:2px;
 ```
+
+---
+
+## 📺 Video Tutorial
+
+Watch this video for a detailed explanation of the Shared Responsibility Model:  
+👉 [Shared Responsibility Model Video Tutorial](https://youtu.be/D-GoY6JceEE?si=tTxu8NHN5gPy_MGV)
+
