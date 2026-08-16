@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AZ-900: Domain 1.2 Practice Test (Interactive)</title>
+  <style>
+    :root {
+      --primary: #0078d4;
+      --primary-dark: #005a9e;
+      --primary-light: #e6f2fb;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --correct-bg: rgba(16, 185, 129, 0.15);
+      --correct-border: #10b981;
+      --wrong-bg: rgba(239, 68, 68, 0.15);
+      --wrong-border: #ef4444;
+      --accent: #38bdf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      padding-bottom: 80px;
+    }
+
+    /* Sticky Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      font-size: 1.6rem;
+    }
+
+    .brand-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .brand-subtitle {
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .stat-pill {
+      background: var(--card-bg);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    /* Hero intro */
+    .intro-card {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--primary);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+
+    .intro-card h1 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #fff;
+    }
+
+    .intro-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* Results Card */
+    #results-card {
+      display: none;
+      background: var(--card-bg);
+      border: 2px solid var(--primary);
+      border-radius: 16px;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 120, 212, 0.25);
+    }
+
+    .score-circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 4px solid var(--accent);
+      margin: 1rem auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .score-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .score-pct {
+      font-size: 0.85rem;
+      color: var(--accent);
+    }
+
+    .result-badge {
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .pass-badge {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid #10b981;
+    }
+
+    .fail-badge {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid #ef4444;
+    }
+
+    /* Question Cards */
+    .question-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .question-card:hover {
+      border-color: #475569;
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .q-num {
+      background: var(--primary-dark);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1.2rem;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .option-label {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #151e2e;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .option-label:hover {
+      background: #24344d;
+      border-color: var(--accent);
+    }
+
+    .option-label input[type="radio"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      outline: none;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .option-label input[type="radio"]:checked {
+      border-color: var(--accent);
+      background-color: var(--primary);
+    }
+
+    .option-label input[type="radio"]:checked::after {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    /* Feedback states */
+    .option-label.is-correct {
+      background: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: #34d399 !important;
+      font-weight: 600;
+    }
+
+    .option-label.is-wrong {
+      background: var(--wrong-bg) !important;
+      border-color: var(--wrong-border) !important;
+      color: #f87171 !important;
+    }
+
+    .explanation-box {
+      display: none;
+      margin-top: 1rem;
+      padding: 1rem;
+      background: #0f172a;
+      border-left: 3px solid var(--accent);
+      border-radius: 6px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .explanation-box strong {
+      color: #fff;
+    }
+
+    /* Actions Bar */
+    .action-bar {
+      margin-top: 2.5rem;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 14px 36px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 10px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 4px 14px rgba(0, 120, 212, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--card-bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #334155;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Header -->
+  <header>
+    <div class="brand">
+      <span class="brand-logo">☁️</span>
+      <div>
+        <div class="brand-title">AZ-900 Exam Simulator</div>
+        <div class="brand-subtitle">Domain 1.2: Cloud Benefits</div>
+      </div>
+    </div>
+    <div class="header-stats">
+      <div class="stat-pill" id="progress-indicator">Answered: 0 / 24</div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- Intro Card -->
+    <div class="intro-card">
+      <h1>Domain 1.2: Benefits of Cloud Services Practice Test</h1>
+      <p>Test your knowledge on High Availability, Scalability, Reliability, Predictability, Security, Governance, and Cloud Models. Select your answers for all 24 questions below, then click <b>Submit Test</b> to view your score and detailed explanations.</p>
+    </div>
+
+    <!-- Score & Results Card (Reveals on Submit) -->
+    <div id="results-card">
+      <h2>Test Summary</h2>
+      <div class="score-circle">
+        <div class="score-num" id="score-text">0/24</div>
+        <div class="score-pct" id="score-pct">0%</div>
+      </div>
+      <div id="result-badge" class="result-badge pass-badge">PASSED</div>
+      <p id="result-feedback" style="color: var(--text-muted); margin-bottom: 1.5rem;"></p>
+      <button class="btn btn-secondary" onclick="resetQuiz()">🔄 Retake Test</button>
+    </div>
+
+    <!-- Questions Container -->
+    <form id="quiz-form">
+      <div id="questions-list"></div>
+
+      <div class="action-bar">
+        <button type="button" class="btn btn-primary" id="submit-btn" onclick="submitQuiz()">🚀 Submit Test & Check Answers</button>
+      </div>
+    </form>
+
+  </div>
+
+  <script>
+    const questions = [
+      {
+        id: 1,
+        question: "A company has an application running on Azure. During a festival, the number of users increases from 10,000 to 500,000. After the festival, traffic returns to normal. Which capability is most useful?",
+        options: [
+          { text: "A. Governance", val: "A" },
+          { text: "B. Scalability", val: "B" },
+          { text: "C. Private cloud", val: "C" },
+          { text: "D. CapEx", val: "D" }
+        ],
+        answer: "B",
+        explanation: "Scalability (specifically elasticity / horizontal scaling) allows an application to automatically increase computing resources during traffic spikes (from 10k to 500k users) and scale back down when demand normalizes."
+      },
+      {
+        id: 2,
+        question: "A company wants to use its existing VMware workloads but move them to Azure with minimal changes. Which Azure solution should it consider?",
+        options: [
+          { text: "A. Azure Arc", val: "A" },
+          { text: "B. Azure VMware Solution", val: "B" },
+          { text: "C. Azure SQL Database", val: "C" },
+          { text: "D. Azure Blob Storage", val: "D" }
+        ],
+        answer: "B",
+        explanation: "Azure VMware Solution (AVS) provides private cloud clusters containing VMware vSphere environments running directly on dedicated bare-metal Azure infrastructure."
+      },
+      {
+        id: 3,
+        question: "A company buys physical servers, networking equipment, and cooling systems for its own data center. Which type of expenditure is this?",
+        options: [
+          { text: "A. OpEx", val: "A" },
+          { text: "B. SaaS", val: "B" },
+          { text: "C. CapEx", val: "C" },
+          { text: "D. Consumption-based", val: "D" }
+        ],
+        answer: "C",
+        explanation: "Capital Expenditure (CapEx) refers to upfront spending on physical hardware, equipment, and on-premises datacenter facilities."
+      },
+      {
+        id: 4,
+        question: "An organization wants its cloud environment to automatically identify resources that don't follow company policies. Which capability is most relevant?",
+        options: [
+          { text: "A. Auditing", val: "A" },
+          { text: "B. Horizontal scaling", val: "B" },
+          { text: "C. Load balancing", val: "C" },
+          { text: "D. Virtualization", val: "D" }
+        ],
+        answer: "A",
+        explanation: "Auditing (using tools like Azure Policy compliance evaluation) continuously checks resources and flags those that do not meet company policies."
+      },
+      {
+        id: 5,
+        question: "A company hosts its application in Azure but wants to keep its sensitive database in its own data center. Which cloud model best describes this environment?",
+        options: [
+          { text: "A. Public", val: "A" },
+          { text: "B. Private", val: "B" },
+          { text: "C. Hybrid", val: "C" },
+          { text: "D. Multicloud", val: "D" }
+        ],
+        answer: "C",
+        explanation: "A Hybrid Cloud model combines public cloud services (Azure) with an on-premises private datacenter."
+      },
+      {
+        id: 6,
+        question: "An application is running on an Azure VM with 4 CPUs and 8 GB RAM. The CPU is constantly overloaded. The company increases the VM to 16 CPUs and 32 GB RAM. What has happened?",
+        options: [
+          { text: "A. Scale out", val: "A" },
+          { text: "B. Scale in", val: "B" },
+          { text: "C. Vertical scaling", val: "C" },
+          { text: "D. Horizontal scaling", val: "D" }
+        ],
+        answer: "C",
+        explanation: "Vertical Scaling (Scale Up) means adding more power (CPU, RAM, disk) to an existing single VM instance."
+      },
+      {
+        id: 7,
+        question: "A company wants developers to deploy an ASP.NET Core API without managing the underlying operating system or physical servers. Which option is most appropriate?",
+        options: [
+          { text: "A. Azure Virtual Machines", val: "A" },
+          { text: "B. Azure App Service", val: "B" },
+          { text: "C. Physical data center", val: "C" },
+          { text: "D. VMware", val: "D" }
+        ],
+        answer: "B",
+        explanation: "Azure App Service is a Platform as a Service (PaaS) offering that allows developers to deploy web applications and APIs without managing the OS or infrastructure."
+      },
+      {
+        id: 8,
+        question: "A company uses Azure for its API, another public cloud provider for analytics, and a third provider for storage. What type of environment is this?",
+        options: [
+          { text: "A. Hybrid cloud", val: "A" },
+          { text: "B. Private cloud", val: "B" },
+          { text: "C. Multicloud", val: "C" },
+          { text: "D. On-premises", val: "D" }
+        ],
+        answer: "C",
+        explanation: "A Multicloud environment leverages services across two or more different public cloud providers (e.g., Azure, AWS, GCP)."
+      },
+      {
+        id: 9,
+        question: "A company's application must continue operating even if an entire Azure region becomes unavailable. What should the organization consider?",
+        options: [
+          { text: "A. Deploying the application across multiple regions", val: "A" },
+          { text: "B. Increasing the RAM of one VM", val: "B" },
+          { text: "C. Buying physical servers", val: "C" },
+          { text: "D. Using only one VM", val: "D" }
+        ],
+        answer: "A",
+        explanation: "Deploying across multiple Azure regions (Multi-region failover / Disaster Recovery) ensures the service survives a complete regional outage."
+      },
+      {
+        id: 10,
+        question: "A company wants to estimate the potential cost of running a workload in Azure before deploying it. Which tool is most suitable?",
+        options: [
+          { text: "A. Azure Pricing Calculator", val: "A" },
+          { text: "B. Azure Arc", val: "B" },
+          { text: "C. Azure VMware Solution", val: "C" },
+          { text: "D. Azure Monitor only", val: "D" }
+        ],
+        answer: "A",
+        explanation: "The Azure Pricing Calculator is specifically designed to configure and estimate costs before deploying workloads."
+      },
+      {
+        id: 11,
+        question: "A company has 1,000 Azure resources. It wants every production resource to follow the same required configuration. Which approach would help maintain consistency?",
+        options: [
+          { text: "A. Templates", val: "A" },
+          { text: "B. Buying more servers", val: "B" },
+          { text: "C. Vertical scaling", val: "C" },
+          { text: "D. Multicloud", val: "D" }
+        ],
+        answer: "A",
+        explanation: "Templates (ARM / Bicep / Terraform) implement Infrastructure as Code (IaC) to guarantee standardized, repeatable, and consistent deployments."
+      },
+      {
+        id: 12,
+        question: "A company wants to run an application but does not want to purchase physical servers or maintain a data center. What cloud characteristic provides this benefit?",
+        options: [
+          { text: "A. Consumption-based cloud model", val: "A" },
+          { text: "B. Private cloud only", val: "B" },
+          { text: "C. CapEx", val: "C" },
+          { text: "D. On-premises computing", val: "D" }
+        ],
+        answer: "A",
+        explanation: "The Consumption-based cloud model allows renting computing resources on-demand with zero physical server purchases or datacenter maintenance."
+      },
+      {
+        id: 13,
+        question: "An online banking application needs to remain available even if one server fails. Which architecture would best support this requirement?",
+        options: [
+          { text: "A. One powerful server only", val: "A" },
+          { text: "B. Multiple application instances", val: "B" },
+          { text: "C. One physical computer", val: "C" },
+          { text: "D. One VM with maximum RAM", val: "D" }
+        ],
+        answer: "B",
+        explanation: "Running multiple redundant application instances behind a load balancer ensures High Availability (HA) if an individual server fails."
+      },
+      {
+        id: 14,
+        question: "A company uses a cloud service where the provider manages the application, operating system, infrastructure, and most maintenance. The company mainly manages users, settings, and its data. Which model is this?",
+        options: [
+          { text: "A. IaaS", val: "A" },
+          { text: "B. PaaS", val: "B" },
+          { text: "C. SaaS", val: "C" },
+          { text: "D. Private cloud", val: "D" }
+        ],
+        answer: "C",
+        explanation: "In Software as a Service (SaaS) (e.g., Microsoft 365), the cloud provider manages everything except users, data, and access permissions."
+      },
+      {
+        id: 15,
+        question: "A company wants maximum control over the operating system and installed software running on its Azure workload. Which model gives it the most control?",
+        options: [
+          { text: "A. SaaS", val: "A" },
+          { text: "B. PaaS", val: "B" },
+          { text: "C. IaaS", val: "C" },
+          { text: "D. Public cloud", val: "D" }
+        ],
+        answer: "C",
+        explanation: "Infrastructure as a Service (IaaS) gives the customer full administrative access and control over the operating system, middleware, and installed applications."
+      },
+      {
+        id: 16,
+        question: "A company's website normally uses two VMs. During a major event, it automatically creates eight additional VMs and removes them when traffic decreases. Which capability is being demonstrated?",
+        options: [
+          { text: "A. Governance", val: "A" },
+          { text: "B. Autoscaling", val: "B" },
+          { text: "C. CapEx", val: "C" },
+          { text: "D. Private cloud", val: "D" }
+        ],
+        answer: "B",
+        explanation: "Autoscaling (horizontal elasticity) dynamically adds VM instances when traffic surges and removes them when traffic returns to normal."
+      },
+      {
+        id: 17,
+        question: "A company has resources running in Azure, its own data center, and another cloud provider. It wants to manage these resources using Azure management capabilities. Which technology is designed for this purpose?",
+        options: [
+          { text: "A. Azure Arc", val: "A" },
+          { text: "B. Azure VMware Solution", val: "B" },
+          { text: "C. Azure App Service", val: "C" },
+          { text: "D. Azure Virtual Machines", val: "D" }
+        ],
+        answer: "A",
+        explanation: "Azure Arc extends Azure governance, monitoring, and management tools across on-premises, multicloud, and edge servers."
+      },
+      {
+        id: 18,
+        question: "An organization wants to protect its application from a large amount of malicious network traffic designed to make the service unavailable. What type of attack is this?",
+        options: [
+          { text: "A. DDoS", val: "A" },
+          { text: "B. Scaling", val: "C" },
+          { text: "C. Governance", val: "C" },
+          { text: "D. Virtualization", val: "D" }
+        ],
+        answer: "A",
+        explanation: "A Distributed Denial of Service (DDoS) attack attempts to crash a service by flooding it with overwhelming traffic from distributed botnets."
+      },
+      {
+        id: 19,
+        question: "A company has a server that is powerful enough for its workload, but the number of incoming requests has become too large for one server. What is the most appropriate scaling approach?",
+        options: [
+          { text: "A. Add CPU to the same server only", val: "A" },
+          { text: "B. Add more application instances", val: "B" },
+          { text: "C. Reduce RAM", val: "C" },
+          { text: "D. Move to CapEx", val: "D" }
+        ],
+        answer: "B",
+        explanation: "Adding more server instances (Horizontal Scaling / Scale Out) distributes high request volumes evenly across a cluster."
+      },
+      {
+        id: 20,
+        question: "A company is responsible for its application data and user access, while Microsoft manages the physical data center, power, cooling, and physical network. Which concept does this describe?",
+        options: [
+          { text: "A. Consumption-based model", val: "A" },
+          { text: "B. Shared responsibility model", val: "B" },
+          { text: "C. Multicloud model", val: "C" },
+          { text: "D. Vertical scaling", val: "D" }
+        ],
+        answer: "B",
+        explanation: "The Shared Responsibility Model divides security and management tasks between the cloud provider (Microsoft) and the customer."
+      },
+      {
+        id: 21,
+        question: "A company wants to reduce its cloud costs when application traffic decreases. What should it do?",
+        options: [
+          { text: "A. Keep all resources running at maximum capacity", val: "A" },
+          { text: "B. Scale down resources when demand decreases", val: "B" },
+          { text: "C. Purchase additional physical servers", val: "C" },
+          { text: "D. Move everything to private cloud", val: "D" }
+        ],
+        answer: "B",
+        explanation: "Scaling down (or scaling in) resources during low-traffic periods reduces cloud compute usage, directly lowering costs."
+      },
+      {
+        id: 22,
+        question: "A company creates a policy that only authorized employees can access production resources. What area does this primarily relate to?",
+        options: [
+          { text: "A. Governance and access control", val: "A" },
+          { text: "B. Vertical scaling", val: "B" },
+          { text: "C. CapEx", val: "C" },
+          { text: "D. Multicloud", val: "D" }
+        ],
+        answer: "A",
+        explanation: "Controlling who can view or manipulate resources is the core purpose of Governance and Access Control (Azure RBAC)."
+      },
+      {
+        id: 23,
+        question: "An Azure service has an availability commitment describing the expected level of uptime. What does this commitment represent?",
+        options: [
+          { text: "A. SLA", val: "A" },
+          { text: "B. CapEx", val: "B" },
+          { text: "C. VM", val: "C" },
+          { text: "D. DDoS", val: "D" }
+        ],
+        answer: "A",
+        explanation: "A Service Level Agreement (SLA) is Microsoft's formal uptime and availability guarantee for an Azure service."
+      },
+      {
+        id: 24,
+        question: "A company wants to avoid purchasing hardware that may remain unused for most of the year. It wants to increase resources during busy periods and reduce them afterward. Which cloud concept best matches this requirement?",
+        options: [
+          { text: "A. Consumption-based model", val: "A" },
+          { text: "B. Private cloud", val: "B" },
+          { text: "C. CapEx", val: "C" },
+          { text: "D. On-premises model", val: "D" }
+        ],
+        answer: "A",
+        explanation: "A Consumption-based model (Pay-as-you-go) allows organizations to pay only for active resources, avoiding wasted spending on idle hardware."
+      }
+    ];
+
+    // Render questions
+    function renderQuiz() {
+      const container = document.getElementById('questions-list');
+      container.innerHTML = '';
+
+      questions.forEach((q, idx) => {
+        const qCard = document.createElement('div');
+        qCard.className = 'question-card';
+        qCard.id = `card-${q.id}`;
+
+        let optionsHtml = '';
+        q.options.forEach(opt => {
+          optionsHtml += `
+            <label class="option-label" id="opt-label-${q.id}-${opt.val}">
+              <input type="radio" name="q${q.id}" value="${opt.val}" onchange="updateProgress()">
+              <span>${opt.text}</span>
+            </label>
+          `;
+        });
+
+        qCard.innerHTML = `
+          <div class="q-header">
+            <span class="q-num">Question ${idx + 1} of 24</span>
+          </div>
+          <div class="q-text">${q.question}</div>
+          <div class="options-list">
+            ${optionsHtml}
+          </div>
+          <div class="explanation-box" id="exp-${q.id}">
+            <strong>Explanation:</strong> ${q.explanation}
+          </div>
+        `;
+
+        container.appendChild(qCard);
+      });
+    }
+
+    // Update answered count
+    function updateProgress() {
+      let answered = 0;
+      questions.forEach(q => {
+        if (document.querySelector(`input[name="q${q.id}"]:checked`)) {
+          answered++;
+        }
+      });
+      document.getElementById('progress-indicator').innerText = `Answered: ${answered} / ${questions.length}`;
+    }
+
+    // Submit and score
+    function submitQuiz() {
+      let score = 0;
+      let answeredCount = 0;
+
+      questions.forEach(q => {
+        const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+        const expBox = document.getElementById(`exp-${q.id}`);
+        expBox.style.display = 'block';
+
+        if (selected) {
+          answeredCount++;
+          const userVal = selected.value;
+          const selectedLabel = document.getElementById(`opt-label-${q.id}-${userVal}`);
+
+          if (userVal === q.answer) {
+            score++;
+            selectedLabel.classList.add('is-correct');
+          } else {
+            selectedLabel.classList.add('is-wrong');
+            // highlight correct answer too
+            const correctLabel = document.getElementById(`opt-label-${q.id}-${q.answer}`);
+            if (correctLabel) correctLabel.classList.add('is-correct');
+          }
+        } else {
+          // If unanswered, highlight correct answer
+          const correctLabel = document.getElementById(`opt-label-${q.id}-${q.answer}`);
+          if (correctLabel) correctLabel.classList.add('is-correct');
+        }
+
+        // Disable radio buttons after submit
+        const inputs = document.querySelectorAll(`input[name="q${q.id}"]`);
+        inputs.forEach(input => input.disabled = true);
+      });
+
+      // Show results
+      const resultsCard = document.getElementById('results-card');
+      const scoreText = document.getElementById('score-text');
+      const scorePct = document.getElementById('score-pct');
+      const badge = document.getElementById('result-badge');
+      const feedback = document.getElementById('result-feedback');
+
+      const pct = Math.round((score / questions.length) * 100);
+      scoreText.innerText = `${score} / ${questions.length}`;
+      scorePct.innerText = `${pct}%`;
+
+      if (pct >= 70) {
+        badge.className = 'result-badge pass-badge';
+        badge.innerText = 'PASSED 🎉';
+        feedback.innerText = `Awesome job! You scored ${pct}% which is well above the passing threshold for AZ-900.`;
+      } else {
+        badge.className = 'result-badge fail-badge';
+        badge.innerText = 'REVIEW RECOMMENDED ⚠️';
+        feedback.innerText = `You scored ${pct}%. Review the highlighted explanations below and retake the test!`;
+      }
+
+      resultsCard.style.display = 'block';
+      resultsCard.scrollIntoView({ behavior: 'smooth' });
+
+      // Disable submit button
+      document.getElementById('submit-btn').style.display = 'none';
+    }
+
+    // Reset Quiz
+    function resetQuiz() {
+      document.getElementById('quiz-form').reset();
+      document.querySelectorAll('.option-label').forEach(el => {
+        el.classList.remove('is-correct', 'is-wrong');
+      });
+      document.querySelectorAll('.explanation-box').forEach(el => {
+        el.style.display = 'none';
+      });
+      document.querySelectorAll('input[type="radio"]').forEach(el => {
+        el.disabled = false;
+      });
+      document.getElementById('results-card').style.display = 'none';
+      document.getElementById('submit-btn').style.display = 'inline-block';
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initialize
+    renderQuiz();
+  </script>
+</body>
+</html>
